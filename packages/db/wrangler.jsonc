@@ -14,7 +14,8 @@
     {
       "binding": "DB",
       "database_name": "monorepo-todo-db",
-      "database_id": "fb245cf9-6c4b-4709-ba61-ca1b26025fd0"
+      "database_id": "fb245cf9-6c4b-4709-ba61-ca1b26025fd0",
+      "migrations_dir": "./src/migrations"
     }
   ]
   /**
