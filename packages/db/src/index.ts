@@ -1,6 +1,8 @@
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "./schema"; // まとめてインポート
 
+export * from "drizzle-orm";
+
 export * from "./schema"; // すべてのテーブル定義を再エクスポート
 
 export const getDb = (env: Env) => {
