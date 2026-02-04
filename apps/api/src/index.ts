@@ -1,6 +1,7 @@
+import { zValidator } from "@hono/zod-validator";
 import { eq, getDb } from "@workspace/db";
 import * as schema from "@workspace/db/schema";
-import type { CreateTodo, UpdateTodo } from "@workspace/validators";
+import { createTodoSchema, updateTodoSchema } from "@workspace/validators";
 import { Hono } from "hono";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>().basePath("/api");
@@ -31,8 +32,8 @@ app
     }
   })
   // 新規登録
-  .post("/todos", async (c) => {
-    const todo = await c.req.json<CreateTodo>();
+  .post("/todos", zValidator("json", createTodoSchema), async (c) => {
+    const todo = c.req.valid("json");
     try {
       const db = getDb(c.env);
       await db.insert(schema.todoTable).values(todo);
@@ -42,9 +43,9 @@ app
     }
   })
   // 更新
-  .put("/todos/:id", async (c) => {
+  .put("/todos/:id", zValidator("json", updateTodoSchema), async (c) => {
     const id = c.req.param("id");
-    const todo = await c.req.json<UpdateTodo>();
+    const todo = c.req.valid("json");
     try {
       const db = getDb(c.env);
       await db
