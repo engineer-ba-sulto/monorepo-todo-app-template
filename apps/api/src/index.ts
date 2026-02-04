@@ -1,10 +1,9 @@
 import { eq, getDb } from "@workspace/db";
 import * as schema from "@workspace/db/schema";
+import type { CreateTodo, UpdateTodo } from "@workspace/validators";
 import { Hono } from "hono";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>().basePath("/api");
-
-type Todo = typeof schema.todoTable.$inferInsert;
 
 app
   // 1件データ取得
@@ -33,7 +32,7 @@ app
   })
   // 新規登録
   .post("/todos", async (c) => {
-    const todo = await c.req.json<Todo>();
+    const todo = await c.req.json<CreateTodo>();
     try {
       const db = getDb(c.env);
       await db.insert(schema.todoTable).values(todo);
@@ -45,7 +44,7 @@ app
   // 更新
   .put("/todos/:id", async (c) => {
     const id = c.req.param("id");
-    const todo = await c.req.json<Todo>();
+    const todo = await c.req.json<UpdateTodo>();
     try {
       const db = getDb(c.env);
       await db

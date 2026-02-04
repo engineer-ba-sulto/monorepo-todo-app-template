@@ -16,6 +16,7 @@
       "name": "api",
       "dependencies": {
         "@workspace/db": "workspace:*",
+        "@workspace/validators": "workspace:*",
         "hono": "^4.11.7",
       },
       "devDependencies": {
@@ -288,6 +289,8 @@
     "@vitest/utils": ["@vitest/utils@3.2.4", "", { "dependencies": { "@vitest/pretty-format": "3.2.4", "loupe": "^3.1.4", "tinyrainbow": "^2.0.0" } }, "sha512-fB2V0JFrQSMsCo9HiSq3Ezpdv4iYaXRG1Sx8edX3MwxfyNn83mKiGzOcH+Fkxt4MHxr3y42fQi1oeAInqgX2QA=="],
 
     "@workspace/db": ["@workspace/db@workspace:packages/db"],
+
+    "@workspace/validators": ["@workspace/validators@workspace:packages/validators"],
 
     "api": ["api@workspace:apps/api"],
 
