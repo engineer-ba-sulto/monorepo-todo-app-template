@@ -1,6 +1,6 @@
 # Monorepo Todo App Template
 
-Cloudflare Workers（Hono）、Next.js、Drizzle ORM、Bun を使ったモノレポの Todo アプリテンプレートです。
+Cloudflare Workers（Hono）、Next.js、Expo（React Native）、Drizzle ORM、Bun を使ったモノレポの Todo アプリテンプレートです。
 
 ## 技術スタック (Tech Stack)
 
@@ -25,6 +25,13 @@ Cloudflare Workers（Hono）、Next.js、Drizzle ORM、Bun を使ったモノレ
 - **Styling:** [Tailwind CSS](https://tailwindcss.com) (v4)
 - **Icons:** [Lucide React](https://lucide.dev)
 
+#### Mobile (`apps/mobile`)
+- **Framework:** [Expo](https://expo.dev) (SDK 55) + [Expo Router](https://docs.expo.dev/router/introduction/)（ファイルベースルーティング）
+- **UI:** React 19 / React Native
+- **Styling:** [NativeWind](https://www.nativewind.dev) (Tailwind for React Native)
+- **共有:** `@workspace/db` / `@workspace/validators` を利用
+- **プラットフォーム:** iOS / Android / Web（Expo Go または開発ビルドで動作）
+
 ### Packages（共有ライブラリ）
 
 #### Database (`packages/db`)
@@ -35,7 +42,7 @@ Cloudflare Workers（Hono）、Next.js、Drizzle ORM、Bun を使ったモノレ
 
 #### Validators (`packages/validators`)
 - **Validation:** [Zod](https://zod.dev) (v4)
-- API と Frontend で共有するバリデーションスキーマ
+- API・Frontend・Mobile で共有するバリデーションスキーマ
 
 ## プロジェクト構造 (File Structure)
 
@@ -46,13 +53,17 @@ Cloudflare Workers（Hono）、Next.js、Drizzle ORM、Bun を使ったモノレ
 │   │   ├── src/index.ts     # エントリ・ルート定義
 │   │   ├── public/          # 静的アセット（Assets バインディング）
 │   │   └── wrangler.jsonc   # Workers 設定（D1 バインディング等）
-│   └── frontend/            # Next.js（Cloudflare Pages）
-│       ├── src/app/         # App Router
-│       ├── src/components/ # UI コンポーネント
-│       └── wrangler.jsonc   # Pages デプロイ設定
+│   ├── frontend/            # Next.js（Cloudflare Pages）
+│   │   ├── src/app/         # App Router
+│   │   ├── src/components/  # UI コンポーネント
+│   │   └── wrangler.jsonc   # Pages デプロイ設定
+│   └── mobile/              # Expo（React Native）
+│       ├── src/app/         # Expo Router（ファイルベース）
+│       ├── app.json         # Expo 設定
+│       └── metro.config.js  # Metro バンドラ設定
 ├── packages/
 │   ├── db/                  # Drizzle スキーマ・マイグレーション
-│   │   └── src/migrations/   # D1 に適用する SQL
+│   │   └── src/migrations/  # D1 に適用する SQL
 │   └── validators/          # 共有 Zod スキーマ
 ├── package.json             # ルート・Workspaces 定義
 ├── biome.json               # Biome 設定
@@ -75,13 +86,28 @@ bun install
 
 ### 3. 開発サーバーの起動
 
-**ルートから一括起動（全ワークスペースの dev）:**
+**ルートから一括起動（API と Frontend の dev を並列実行）:**
 
 ```bash
 bun run dev
 ```
 
-**個別に起動する場合:**
+**Mobile（Expo）の起動:**
+
+```bash
+bun run start
+```
+
+または `apps/mobile` で個別に:
+
+```bash
+cd apps/mobile && bun run start   # 開発サーバー起動（Expo Go / シミュレータ用）
+bun run ios                       # iOS シミュレータ
+bun run android                   # Android エミュレータ
+bun run web                       # Web ビルド
+```
+
+**個別に起動する場合（API / Frontend）:**
 
 ```bash
 # API (Backend)
@@ -93,6 +119,7 @@ cd apps/frontend && bun run dev
 
 - API: 通常は `http://localhost:8787`（wrangler の既定）
 - Frontend: `http://localhost:3000`
+- Mobile: Expo 開発サーバー起動後、Expo Go またはシミュレータで接続
 
 ### 4. データベース・マイグレーション
 
@@ -121,7 +148,8 @@ bunx drizzle-kit generate
 
 | コマンド | 説明 |
 |----------|------|
-| `bun run dev` | 全ワークスペースの `dev` を並列実行 |
+| `bun run dev` | 全ワークスペースの `dev` を並列実行（API・Frontend 等） |
+| `bun run start` | Mobile（Expo）の開発サーバー起動（キャッシュクリア付き） |
 | `bun run check` | Biome でチェック |
 | `bun run check:fix` | チェック＋自動修正 |
 | `bun run format` | フォーマット |
@@ -134,6 +162,7 @@ bunx drizzle-kit generate
 
 - **API:** `cd apps/api && bun run deploy`（Wrangler で Workers にデプロイ）
 - **Frontend:** `cd apps/frontend && bun run deploy`（OpenNext で Cloudflare Pages にデプロイ）
+- **Mobile:** Expo の [EAS Build](https://docs.expo.dev/build/introduction/) やストア向けビルドは `apps/mobile` で別途設定
 
 型生成（Cloudflare バインディング）:
 
