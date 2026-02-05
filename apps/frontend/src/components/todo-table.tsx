@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
-export default async function TodoTable({ className }: { className?: string }) {
+export default async function TodoTable({
+  className,
+  todos,
+}: {
+  className?: string;
+  todos: Todo[];
+}) {
   return (
     <div className={`${cn("w-full", className)}`}>
       <Table>
@@ -20,10 +26,12 @@ export default async function TodoTable({ className }: { className?: string }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell>1</TableCell>
-            <TableCell>Todo 1</TableCell>
-          </TableRow>
+          {todos.map((todo: Todo) => (
+            <TableRow key={todo.id}>
+              <TableCell>{todo.id}</TableCell>
+              <TableCell>{todo.todo}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
