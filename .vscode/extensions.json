@@ -1,3 +1,3 @@
 {
-  "recommendations": ["biomejs.biome"]
+  "recommendations": ["expo.vscode-expo-tools", "biomejs.biome"]
 }
