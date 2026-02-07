@@ -6,9 +6,13 @@
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "types": "./src/index.ts",
+  "scripts": {
+    "seed": "echo 'Seed は D1 のため API 経由で実行: curl -X POST http://localhost:8787/api/seed'"
+  },
   "exports": {
     ".": "./src/index.ts",
-    "./schema": "./src/schema/index.ts"
+    "./schema": "./src/schema/index.ts",
+    "./seed": "./src/seed.ts"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.8",
