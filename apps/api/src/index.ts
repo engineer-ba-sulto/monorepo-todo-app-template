@@ -1,6 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { eq, getDb } from "@workspace/db";
 import * as schema from "@workspace/db/schema";
+import { runSeed } from "@workspace/db/seed";
 import { createTodoSchema, updateTodoSchema } from "@workspace/validators";
 import { Hono } from "hono";
 
@@ -64,6 +65,16 @@ app
       const db = getDb(c.env);
       await db.delete(schema.todoTable).where(eq(schema.todoTable.id, id));
       return c.json({ message: "Success" }, 200);
+    } catch (e) {
+      return c.json({ error: e }, 500);
+    }
+  })
+  // 初期データ投入（開発・ローカル用）
+  .post("/seed", async (c) => {
+    try {
+      const db = getDb(c.env);
+      await runSeed(db);
+      return c.json({ message: "Seed completed" }, 201);
     } catch (e) {
       return c.json({ error: e }, 500);
     }
