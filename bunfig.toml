@@ -1,0 +1,4 @@
+# configVersion が 0 に上書きされても、常に isolated（各パッケージに node_modules）
+# でインストールする。Bun の「既存プロジェクト → 0」判定に左右されない。
+[install]
+linker = "isolated"
