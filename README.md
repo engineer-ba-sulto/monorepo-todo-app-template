@@ -75,10 +75,20 @@ Cloudflare Workers（Hono）、Next.js、Expo（React Native）、Drizzle ORM、
 │   │   └── src/migrations/      # D1 に適用する SQL
 │   └── validators/              # 共有 Zod スキーマ
 ├── package.json                 # ルート・Workspaces 定義
+├── bunfig.toml                  # Bun ランタイム・インストール設定（後述）
 ├── biome.json                   # Biome 設定
 ├── tsconfig.json                # ルート型チェック用
 └── bun.lock
 ```
+
+### Bun 設定 (bunfig.toml)
+
+ルートの `bunfig.toml` で Bun のインストール挙動を指定しています。
+
+- **`[install] linker = "isolated"`**  
+  各ワークスペース（パッケージ）ごとに `node_modules` がホイストされず、パッケージ単位で依存がインストールされます。Bun の「既存プロジェクトでは `configVersion` が 0 のとき非 isolated」という判定に依存せず、常に isolated で統一するために設定しています。
+
+詳細は公式ドキュメントを参照してください: [Bun - bunfig](https://bun.com/docs/runtime/bunfig)
 
 ## セットアップと開発 (Getting Started)
 
